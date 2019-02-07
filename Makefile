@@ -16,7 +16,11 @@ CFLAGS	+=	-I./include
 NAME	=	my_nm
 
 SRCS	=	srcs/main.c			\
-			srcs/print_type.c	\
+			srcs/chainlist.c	\
+			srcs/found_type.c	\
+			srcs/actions.c		\
+			srcs/actions_two.c	\
+			srcs/push_swap.c	\
 
 OBJS	=	$(SRCS:.c=.o)
 

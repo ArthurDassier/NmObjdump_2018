@@ -10,18 +10,40 @@
 void if_cmp(Elf64_Shdr **symtab, Elf64_Shdr **strtab, Elf64_Shdr *shdr, char *str)
 {
     if (strcmp(&str[shdr->sh_name], ".symtab") == 0)
-        *symtab = (Elf64_Shdr *) shdr;
+        *symtab = (Elf64_Shdr *)shdr;
     if (strcmp(&str[shdr->sh_name], ".strtab") == 0)
-        *strtab = (Elf64_Shdr *) shdr;
+        *strtab = (Elf64_Shdr *)shdr;
 }
 
-void print_things(Elf64_Sym *sym, Elf64_Shdr *shdr, char *str, size_t i)
+void put_things_in_list(chainlist **list, Elf64_Sym *sym,
+Elf64_Shdr *shdr, char *str)
 {
-    if (sym[i].st_value != 0)
-        printf("%016lx ", sym[i].st_value);
+    int     adr = 0;
+    char    type = 0;
+    char    *name = NULL;
+
+    if (sym->st_value != 0)
+        adr = sym->st_value;
+    type = found_type(*sym, shdr);
+    name = str + sym->st_name;
+    if (*list == NULL)
+        *list = init(adr, type, name);
     else
-        printf("\t\t ");
-    printf("%c %s\n", print_type(sym[i], shdr), str + sym[i].st_name);
+        insert_end(list, adr, type, name);
+}
+
+void printe(chainlist *list)
+{
+    for(; list->next != NULL; list = list->next) {
+        if (list->adress != 0)
+            printf("%016x %c %s\n", list->adress, list->type, list->name);
+        else
+            printf("\t\t %c %s\n", list->type, list->name);
+    }
+    if (list->adress != 0)
+        printf("%016x %c %s\n", list->adress, list->type, list->name);
+    else
+        printf("\t\t %c %s\n", list->type, list->name);
 }
 
 void get_section(void *data)
@@ -32,6 +54,7 @@ void get_section(void *data)
     Elf64_Shdr      *strtab = NULL;
     Elf64_Sym       *sym = NULL;
     char            *str = (char *) (data + shdr[elf->e_shstrndx].sh_offset);
+    chainlist       *list = NULL;
 
     for (int i = 0; i < elf->e_shnum; ++i) {
         if (shdr[i].sh_size)
@@ -41,8 +64,10 @@ void get_section(void *data)
     str = (char*) (data + strtab->sh_offset);
     for (size_t i = 0; i < (symtab->sh_size / symtab->sh_entsize); ++i) {
         if (sym[i].st_name != 0 && sym[i].st_info != STT_FILE)
-            print_things(sym, shdr, str, i);
+            put_things_in_list(&list, &sym[i], shdr, str);
     }
+    list = brain(list);
+    printe(list);
 }
 
 int open_files(char *filename)

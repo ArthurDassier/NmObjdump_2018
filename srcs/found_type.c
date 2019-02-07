@@ -7,7 +7,7 @@
 
 #include "nmobjdump.h"
 
-char print_type_part_two(Elf64_Sym sym, Elf64_Shdr *shdr, char c)
+static char found_type_part_two(Elf64_Sym sym, Elf64_Shdr *shdr, char c)
 {
     if (shdr[sym.st_shndx].sh_type == SHT_NOBITS
     && shdr[sym.st_shndx].sh_flags == (SHF_ALLOC | SHF_WRITE))
@@ -30,7 +30,7 @@ char print_type_part_two(Elf64_Sym sym, Elf64_Shdr *shdr, char c)
     return (c);
 }
 
-char print_type(Elf64_Sym sym, Elf64_Shdr *shdr)
+char found_type(Elf64_Sym sym, Elf64_Shdr *shdr)
 {
     char c = 0;
 
@@ -51,5 +51,5 @@ char print_type(Elf64_Sym sym, Elf64_Shdr *shdr)
         c = 'A';
     else if (sym.st_shndx == SHN_COMMON)
         c = 'C';
-    return (print_type_part_two(sym, shdr, c));
+    return (found_type_part_two(sym, shdr, c));
 }
