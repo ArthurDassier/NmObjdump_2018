@@ -45,5 +45,6 @@ void pa(chainlist **, chainlist **);
 int recup(chainlist *);
 
 chainlist *brain(chainlist *);
+void print_me_that(chainlist *);
 
 #endif

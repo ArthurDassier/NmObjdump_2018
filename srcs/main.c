@@ -32,20 +32,6 @@ Elf64_Shdr *shdr, char *str)
         insert_end(list, adr, type, name);
 }
 
-void printe(chainlist *list)
-{
-    for(; list->next != NULL; list = list->next) {
-        if (list->adress != 0)
-            printf("%016x %c %s\n", list->adress, list->type, list->name);
-        else
-            printf("\t\t %c %s\n", list->type, list->name);
-    }
-    if (list->adress != 0)
-        printf("%016x %c %s\n", list->adress, list->type, list->name);
-    else
-        printf("\t\t %c %s\n", list->type, list->name);
-}
-
 void get_section(void *data)
 {
     Elf64_Ehdr      *elf = (Elf64_Ehdr *)(data);
@@ -67,7 +53,7 @@ void get_section(void *data)
             put_things_in_list(&list, &sym[i], shdr, str);
     }
     list = brain(list);
-    printe(list);
+    print_me_that(list);
 }
 
 int open_files(char *filename)

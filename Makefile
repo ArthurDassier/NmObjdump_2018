@@ -21,6 +21,7 @@ SRCS	=	srcs/main.c			\
 			srcs/actions.c		\
 			srcs/actions_two.c	\
 			srcs/push_swap.c	\
+			srcs/print.c		\
 
 OBJS	=	$(SRCS:.c=.o)
 

@@ -1,0 +1,22 @@
+/*
+** EPITECH PROJECT, 2019
+** print.c
+** File description:
+** print
+*/
+
+#include "nmobjdump.h"
+
+void print_me_that(chainlist *list)
+{
+    for(; list->next != NULL; list = list->next) {
+        if (list->adress != 0)
+            printf("%016x %c %s\n", list->adress, list->type, list->name);
+        else
+            printf("\t\t %c %s\n", list->type, list->name);
+    }
+    if (list->adress != 0)
+        printf("%016x %c %s\n", list->adress, list->type, list->name);
+    else
+        printf("\t\t %c %s\n", list->type, list->name);
+}
