@@ -15,13 +15,17 @@ CFLAGS	+=	-I./include
 
 NAME	=	my_nm
 
-SRCS	=	srcs/main.c			\
-			srcs/chainlist.c	\
-			srcs/found_type.c	\
-			srcs/actions.c		\
-			srcs/actions_two.c	\
-			srcs/push_swap.c	\
-			srcs/print.c		\
+SRCS	=	srcs/nm.c					\
+			srcs/global/print.c			\
+			srcs/global/actions.c		\
+			srcs/global/actions_two.c	\
+			srcs/global/chainlist.c		\
+			srcs/global/push_swap.c		\
+			srcs/32/found_type32.c		\
+			srcs/32/nm_32.c				\
+			srcs/64/found_type64.c		\
+			srcs/64/nm_64.c				\
+
 
 OBJS	=	$(SRCS:.c=.o)
 

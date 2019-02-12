@@ -24,13 +24,13 @@ static char found_type_part_two(Elf64_Sym sym, Elf64_Shdr *shdr, char c)
     else if (shdr[sym.st_shndx].sh_type == SHT_DYNAMIC)
         c = 'D';
     else
-        c = '?';
-    if (ELF64_ST_BIND(sym.st_info) == STB_LOCAL && c != '?')
+        c = ' ';
+    if (ELF64_ST_BIND(sym.st_info) == STB_LOCAL && c != ' ')
         c += 32;
     return (c);
 }
 
-char found_type(Elf64_Sym sym, Elf64_Shdr *shdr)
+char found_type64(Elf64_Sym sym, Elf64_Shdr *shdr)
 {
     char c = 0;
 

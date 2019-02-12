@@ -24,7 +24,7 @@ Elf64_Shdr *shdr, char *str)
 
     if (sym->st_value != 0)
         adr = sym->st_value;
-    type = found_type(*sym, shdr);
+    type = found_type64(*sym, shdr);
     name = str + sym->st_name;
     if (*list == NULL)
         *list = init(adr, type, name);
@@ -39,15 +39,24 @@ void get_section(void *data)
     Elf64_Shdr      *symtab = NULL;
     Elf64_Shdr      *strtab = NULL;
     Elf64_Sym       *sym = NULL;
-    char            *str = (char *) (data + shdr[elf->e_shstrndx].sh_offset);
+    char            *str = NULL;
     chainlist       *list = NULL;
 
+    if (elf == NULL || shdr == NULL || data == NULL)
+        exit(84);
+    if (elf->e_ident[4] == 2) {
+        get_section32(data);
+        return;
+    }
+    str = (char *) (data + shdr[elf->e_shstrndx].sh_offset);
     for (int i = 0; i < elf->e_shnum; ++i) {
         if (shdr[i].sh_size)
             if_cmp(&symtab, &strtab, &shdr[i], str);
     }
     sym = (Elf64_Sym*) (data + symtab->sh_offset);
     str = (char*) (data + strtab->sh_offset);
+    if (sym == NULL || str == NULL)
+        exit(84);
     for (size_t i = 0; i < (symtab->sh_size / symtab->sh_entsize); ++i) {
         if (sym[i].st_name != 0 && sym[i].st_info != STT_FILE)
             put_things_in_list(&list, &sym[i], shdr, str);
@@ -67,16 +76,5 @@ int open_files(char *filename)
     data = mmap(NULL, lseek(fd, 0, SEEK_END), PROT_READ, MAP_SHARED, fd, 0);
     get_section(data);
     close(fd);
-    return (0);
-}
-
-int main(int ac , char **av)
-{
-    if (ac == 1)
-        return (open_files("a.out"));
-    for(int i = 1; i < ac; ++i) {
-        if (open_files(av[1]) == 84)
-            return (84);
-    }
     return (0);
 }

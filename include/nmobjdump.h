@@ -1,5 +1,5 @@
 /*
-** EPITECH PROJECT, 2018
+** EPITECH PROJECT, 2019
 ** my.h
 ** File description:
 ** mes_prototypes
@@ -29,7 +29,13 @@ struct chainlist
     chainlist *next;
 };
 
-char found_type(Elf64_Sym, Elf64_Shdr *);
+int open_files(char *);
+
+char found_type64(Elf64_Sym, Elf64_Shdr *);
+char found_type32(Elf32_Sym, Elf32_Shdr *);
+
+void get_section32(void *);
+
 chainlist *init(int, char, char *);
 void insert_end(chainlist **, int, char, char *);
 void insert_end(chainlist **, int, char, char *);
