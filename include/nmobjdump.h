@@ -31,7 +31,7 @@ struct chainlist
 
 int open_files(char *);
 
-char found_type64(Elf64_Sym, Elf64_Shdr *);
+char found_type64(Elf64_Sym, Elf64_Shdr *, char *);
 char found_type32(Elf32_Sym, Elf32_Shdr *);
 
 void get_section32(void *);
@@ -52,5 +52,7 @@ int recup(chainlist *);
 
 chainlist *brain(chainlist *);
 void print_me_that(chainlist *);
+
+char *getter(char *, int);
 
 #endif

@@ -7,6 +7,15 @@
 
 #include "nmobjdump.h"
 
+char *getter(char *str, int value)
+{
+    static char *tamer;
+
+    if (value == 1)
+        tamer = str;
+    return (tamer);
+}
+
 void if_cmp(Elf64_Shdr **symtab, Elf64_Shdr **strtab, Elf64_Shdr *shdr, char *str)
 {
     if (strcmp(&str[shdr->sh_name], ".symtab") == 0)
@@ -24,7 +33,7 @@ Elf64_Shdr *shdr, char *str)
 
     if (sym->st_value != 0)
         adr = sym->st_value;
-    type = found_type64(*sym, shdr);
+    type = found_type64(*sym, shdr, str);
     name = str + sym->st_name;
     if (*list == NULL)
         *list = init(adr, type, name);
@@ -49,6 +58,7 @@ void get_section(void *data)
         return;
     }
     str = (char *) (data + shdr[elf->e_shstrndx].sh_offset);
+    getter(str, 1);
     for (int i = 0; i < elf->e_shnum; ++i) {
         if (shdr[i].sh_size)
             if_cmp(&symtab, &strtab, &shdr[i], str);
