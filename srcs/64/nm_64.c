@@ -44,7 +44,7 @@ void get_section(void *data)
 
     if (elf == NULL || shdr == NULL || data == NULL)
         exit(84);
-    if (elf->e_ident[4] == 2) {
+    if (elf->e_ident[4] == 1) {
         get_section32(data);
         return;
     }
