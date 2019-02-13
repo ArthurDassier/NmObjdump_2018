@@ -40,7 +40,7 @@ chainlist *init(int, char, char *);
 void insert_end(chainlist **, int, char, char *);
 void insert_end(chainlist **, int, char, char *);
 
-int my_strcmp(char const *, char const *);
+int my_strcmp(char const *, char const *, int, int);
 
 int is_sup(chainlist *);
 void pb(chainlist **, chainlist **);

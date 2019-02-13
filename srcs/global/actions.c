@@ -12,7 +12,7 @@ int is_sup(chainlist *first_elem)
     chainlist   *actual = first_elem;
 
     while (actual->next != NULL) {
-        if (my_strcmp(actual->name, actual->next->name))
+        if (my_strcmp(actual->name, actual->next->name, 0, 0))
             return (1);
         actual = actual->next;
     }
@@ -58,7 +58,7 @@ int recup(chainlist *first_elem)
     chainlist   *tmp2 = first_elem;
 
     while (tmp->next != NULL) {
-        if (my_strcmp(tmp2->name, tmp->next->name))
+        if (my_strcmp(tmp2->name, tmp->next->name, 0, 0))
             return (0);
         tmp = tmp->next;
     }

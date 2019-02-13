@@ -8,14 +8,11 @@
 #include <ctype.h>
 #include "nmobjdump.h"
 
-int my_strcmp(char const *s1, char const *s2)
+int my_strcmp(char const *s1, char const *s2, int i, int j)
 {
-    int i = 0;
-    int j = 0;
-
-    while(s1[i] == '_' || s1[i] == '.' && s1[i])
+    while((s1[i] == '_' || s1[i] == '.') && s1[i])
         ++i;
-    while(s2[j] == '_' || s2[j] == '_' && s2[j])
+    while((s2[j] == '_' || s2[j] == '.') && s2[j])
         ++j;
     while (tolower(s1[i]) == tolower(s2[j]) && s1[i] && s2[j]) {
         ++j;
