@@ -54,6 +54,9 @@ void get_section(void *data)
 
     if (elf == NULL || shdr == NULL || data == NULL)
         exit(84);
+    if (elf->e_ident[0] == ELFMAG0 && elf->e_ident[1] == ELFMAG1
+    && elf->e_ident[2] == ELFMAG2 && elf->e_ident[3] == ELFMAG3)
+        exit(84);
     if (elf->e_ident[4] == 1) {
         get_section32(data);
         return;
