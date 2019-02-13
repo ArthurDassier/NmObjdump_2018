@@ -33,7 +33,7 @@ Elf64_Shdr *shdr, char *str)
 
     if (sym->st_value != 0)
         adr = sym->st_value;
-    type = found_type64(*sym, shdr, str);
+    type = found_type64(*sym, shdr);
     name = str + sym->st_name;
     printf(">>> %s\n", name);
     if (*list == NULL)

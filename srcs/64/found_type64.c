@@ -66,7 +66,7 @@ static char found_type_part_two(Elf64_Sym sym, Elf64_Shdr *shdr, char c)
     return (found_type_part_three(sym, shdr, c));
 }
 
-char found_type64(Elf64_Sym sym, Elf64_Shdr *shdr, char *str)
+char found_type64(Elf64_Sym sym, Elf64_Shdr *shdr)
 {
     char c = 0;
 
