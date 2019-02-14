@@ -7,15 +7,6 @@
 
 #include "nmobjdump.h"
 
-char *getter(char *str, int value)
-{
-    static char *tamer;
-
-    if (value == 1)
-        tamer = str;
-    return (tamer);
-}
-
 static void if_cmp(Elf64_Shdr **symtab, Elf64_Shdr **strtab,
 Elf64_Shdr *shdr, char *str)
 {

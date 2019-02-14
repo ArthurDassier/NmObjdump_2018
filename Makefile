@@ -21,6 +21,7 @@ SRCS_NM	=	srcs/nm/nm.c						\
 			srcs/nm/global/actions_two.c		\
 			srcs/nm/global/chainlist.c			\
 			srcs/nm/global/push_swap.c			\
+			srcs/nm/global/utils.c				\
 			srcs/nm/three/found_type_three.c	\
 			srcs/nm/three/nm_three.c			\
 			srcs/nm/six/found_type_six.c		\
