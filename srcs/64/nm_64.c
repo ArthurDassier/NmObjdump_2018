@@ -35,7 +35,6 @@ Elf64_Shdr *shdr, char *str)
         adr = sym->st_value;
     type = found_type64(*sym, shdr);
     name = str + sym->st_name;
-    printf(">>> %s\n", name);
     if (*list == NULL)
         *list = init(adr, type, name);
     else
