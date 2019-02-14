@@ -77,21 +77,21 @@ char found_type_six(Elf64_Sym sym, Elf64_Shdr *shdr)
 
     if (compare(sym, shdr, getter(NULL, 42), ".bss"))
         c = 'B';
-    if (ELF64_ST_BIND(sym.st_info) == STB_WEAK) {
+    if (ELF64_ST_BIND(sym.st_info) == STB_WEAK && c == 0) {
         c = 'W';
         if (sym.st_shndx == SHN_UNDEF)
             c = 'w';
     }
-    if (sym.st_shndx == SHN_UNDEF)
+    if (sym.st_shndx == SHN_UNDEF && c == 0)
         c = 'U';
-    if (shdr[sym.st_shndx].sh_type == SHT_PROGBITS
+    if (shdr[sym.st_shndx].sh_type == SHT_PROGBITS && c == 0
     && shdr[sym.st_shndx].sh_flags == (SHF_ALLOC | SHF_EXECINSTR))
         c = 'T';
-    if (compare(sym, shdr, getter(NULL, 42), ".text")
-    || ELF64_ST_TYPE(sym.st_info) == STT_FUNC)
+    if ((compare(sym, shdr, getter(NULL, 42), ".text")
+    || ELF64_ST_TYPE(sym.st_info) == STT_FUNC) && c == 0)
         c = 'T';
-    if (compare(sym, shdr, getter(NULL, 42), ".init_array")
-    || ELF64_ST_TYPE(sym.st_info) == STT_FUNC)
+    if ((compare(sym, shdr, getter(NULL, 42), ".init_array")
+    || ELF64_ST_TYPE(sym.st_info) == STT_FUNC) && c == 0)
         c = 'T';
     return (found_type_part_two(sym, shdr, c));
 }

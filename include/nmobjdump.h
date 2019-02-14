@@ -34,7 +34,8 @@ int open_files(char *);
 char found_type_six(Elf64_Sym, Elf64_Shdr *);
 char found_type_three(Elf32_Sym, Elf32_Shdr *);
 
-void get_section_three(void *);
+void get_section_three(void *, Elf32_Shdr *, Elf32_Shdr *, Elf32_Sym *);
+void verify_elf(Elf64_Ehdr *, Elf64_Shdr *, void *);
 
 chainlist *init(int, char, char *);
 void insert_end(chainlist **, int, char, char *);

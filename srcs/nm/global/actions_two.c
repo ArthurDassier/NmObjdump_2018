@@ -8,6 +8,19 @@
 #include <ctype.h>
 #include "nmobjdump.h"
 
+void verify_elf(Elf64_Ehdr *elf, Elf64_Shdr *shdr, void *data)
+{
+    if (elf == NULL || shdr == NULL || data == NULL)
+        exit(84);
+    if (elf->e_ident[0] != ELFMAG0 || elf->e_ident[1] != ELFMAG1
+    || elf->e_ident[2] != ELFMAG2 || elf->e_ident[3] != ELFMAG3)
+        exit(84);
+    if (elf->e_ident[4] == 1) {
+        get_section_three(data, NULL, NULL, NULL);
+        exit(0);
+    }
+}
+
 int my_strcmp(char const *s1, char const *s2, int i, int j)
 {
     while ((s1[i] == '_' || s1[i] == '.') && s1[i])

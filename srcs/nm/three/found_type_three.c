@@ -71,7 +71,7 @@ static char found_type_part_two(Elf32_Sym sym, Elf32_Shdr *shdr, char c)
     return (found_type_part_three(sym, shdr, c));
 }
 
-char found_type32(Elf32_Sym sym, Elf32_Shdr *shdr)
+char found_type_three(Elf32_Sym sym, Elf32_Shdr *shdr)
 {
     char c = 0;
 
