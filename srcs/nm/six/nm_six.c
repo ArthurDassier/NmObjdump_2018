@@ -28,13 +28,13 @@ Elf64_Shdr *shdr, char *str)
 void put_things_in_list(chainlist **list, Elf64_Sym *sym,
 Elf64_Shdr *shdr, char *str)
 {
-    int     adr = 0;
-    char    type = 0;
-    char    *name = NULL;
+    char *name = NULL;
+    char type = 0;
+    int adr = 0;
 
     if (sym->st_value != 0)
         adr = sym->st_value;
-    type = found_type64(*sym, shdr);
+    type = found_type_six(*sym, shdr);
     name = str + sym->st_name;
     if (*list == NULL)
         *list = init(adr, type, name);
@@ -44,13 +44,13 @@ Elf64_Shdr *shdr, char *str)
 
 void get_section(void *data)
 {
-    Elf64_Ehdr      *elf = (Elf64_Ehdr *)(data);
-    Elf64_Shdr      *shdr = (Elf64_Shdr *) (data + elf->e_shoff);
-    Elf64_Shdr      *symtab = NULL;
-    Elf64_Shdr      *strtab = NULL;
-    Elf64_Sym       *sym = NULL;
-    char            *str = NULL;
-    chainlist       *list = NULL;
+    Elf64_Ehdr *elf = (Elf64_Ehdr *)(data);
+    Elf64_Shdr *shdr = (Elf64_Shdr *) (data + elf->e_shoff);
+    Elf64_Shdr *symtab = NULL;
+    Elf64_Shdr *strtab = NULL;
+    Elf64_Sym *sym = NULL;
+    chainlist *list = NULL;
+    char *str = NULL;
 
     if (elf == NULL || shdr == NULL || data == NULL)
         exit(84);
@@ -58,7 +58,7 @@ void get_section(void *data)
     || elf->e_ident[2] != ELFMAG2 || elf->e_ident[3] != ELFMAG3)
         exit(84);
     if (elf->e_ident[4] == 1) {
-        get_section32(data);
+        get_section_three(data);
         return;
     }
     str = (char *) (data + shdr[elf->e_shstrndx].sh_offset);
@@ -81,8 +81,8 @@ void get_section(void *data)
 
 int open_files(char *filename)
 {
-    int fd = 0;
     void *data = NULL;
+    int fd = 0;
 
     fd = open(filename, O_RDONLY);
     if (fd == -1)

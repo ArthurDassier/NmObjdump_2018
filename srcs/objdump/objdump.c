@@ -18,13 +18,13 @@
 
 int main(int ac, char **av)
 {
-    int         fd;
-    int         counter;
-    int         filesize;
-    void        *data;
-    char        *strtab;
-    Elf64_Ehdr  *elf;
-    Elf64_Shdr  *shdr;
+    Elf64_Ehdr *elf;
+    Elf64_Shdr *shdr;
+    void *data;
+    char *strtab;
+    int filesize;
+    int counter;
+    int fd;
 
     counter = 0;
     fd = open(av[1], O_RDONLY);
@@ -39,7 +39,13 @@ int main(int ac, char **av)
         shdr = (Elf64_Shdr *)(data + elf->e_shoff);
         strtab = (char *)(data + shdr[elf->e_shstrndx].sh_offset);
         while(counter < elf->e_shnum) {
-            printf("%s\n", &strtab[shdr[counter].sh_name]);
+            if (strcmp(&strtab[shdr[counter].sh_name], ".bss")
+            && strcmp(&strtab[shdr[counter].sh_name], ".symtab")
+            && strcmp(&strtab[shdr[counter].sh_name], ".strtab")
+            && strcmp(&strtab[shdr[counter].sh_name], ".shstrtab")
+            && strcmp(&strtab[shdr[counter].sh_name], "\0")) {
+                printf("%s\n", &strtab[shdr[counter].sh_name]);
+            }
             ++counter;
         }
         return (EXIT_SUCCESS);

@@ -9,8 +9,8 @@
 
 chainlist *brain(chainlist *liste)
 {
-    chainlist   *list_a = liste;
-    chainlist   *list_b = NULL;
+    chainlist *list_a = liste;
+    chainlist *list_b = NULL;
 
     while (is_sup(list_a) == 1) {
         if (is_sup(list_a) == 1)

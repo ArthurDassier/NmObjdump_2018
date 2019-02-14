@@ -10,16 +10,16 @@
 
 int my_strcmp(char const *s1, char const *s2, int i, int j)
 {
-    while((s1[i] == '_' || s1[i] == '.') && s1[i])
+    while ((s1[i] == '_' || s1[i] == '.') && s1[i])
         ++i;
-    while((s2[j] == '_' || s2[j] == '.') && s2[j])
+    while ((s2[j] == '_' || s2[j] == '.') && s2[j])
         ++j;
     while (tolower(s1[i]) == tolower(s2[j]) && s1[i] && s2[j]) {
         ++j;
         ++i;
-        while(!(isalnum(s1[i])) && s1[i])
+        while (!(isalnum(s1[i])) && s1[i])
             ++i;
-        while(!(isalnum(s2[j])) && s2[j])
+        while (!(isalnum(s2[j])) && s2[j])
             ++j;
     }
     if ((s1[i] == '\0' && s2[j] == '\0')) {
@@ -34,8 +34,8 @@ int my_strcmp(char const *s1, char const *s2, int i, int j)
 
 void pb(chainlist **list_out, chainlist **list_in)
 {
-    chainlist   *tmp = (*list_out);
-    chainlist   *tmp2 = (*list_in);
+    chainlist *tmp = (*list_out);
+    chainlist *tmp2 = (*list_in);
 
     (*list_out) = (*list_out)->next;
     (*list_in) = tmp;

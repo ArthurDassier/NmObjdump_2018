@@ -9,7 +9,7 @@
 
 void print_me_that(chainlist *list)
 {
-    for(; list->next != NULL; list = list->next) {
+    for (; list->next != NULL; list = list->next) {
         if (list->type != 'U' && list->type != 'w')
             printf("%016x %c %s\n", list->adress, list->type, list->name);
         else

@@ -1,5 +1,12 @@
+/*
+** EPITECH PROJECT, 2019
+** bfd
+** File description:
+** bfd
+*/
+
 #ifndef __BFD_H_SEEN__
-#define __BFD_H_SEEN__
+    #define __BFD_H_SEEN__
 
 /* Values that may appear in the flags field of a BFD.  These also
    appear in the object_flags field of the bfd_target structure, where
