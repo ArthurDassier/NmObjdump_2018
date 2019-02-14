@@ -5,7 +5,7 @@
 ## a_makefile_for_projetcs
 ##
 
-CC	=	gcc -g3
+CC	=	gcc
 
 RM	=	rm -rf
 

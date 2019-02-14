@@ -9,7 +9,6 @@
 
 int compare32(Elf32_Sym sym, Elf32_Shdr *shdr, char *str, char *s)
 {
-    printf("%s | %s\n", (&str[shdr[sym.st_shndx].sh_name]), s);
     if (strcmp(&str[shdr[sym.st_shndx].sh_name], s) == 0)
         return (1);
     return (0);

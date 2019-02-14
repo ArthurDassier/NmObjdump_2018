@@ -16,7 +16,8 @@ char *getter(char *str, int value)
     return (tamer);
 }
 
-void if_cmp(Elf64_Shdr **symtab, Elf64_Shdr **strtab, Elf64_Shdr *shdr, char *str)
+void if_cmp(Elf64_Shdr **symtab, Elf64_Shdr **strtab,
+Elf64_Shdr *shdr, char *str)
 {
     if (strcmp(&str[shdr->sh_name], ".symtab") == 0)
         *symtab = (Elf64_Shdr *)shdr;
