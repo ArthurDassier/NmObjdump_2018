@@ -68,6 +68,8 @@ int check_format(void *data)
         return (1);
     if (code == 2)
         return (0);
+    if (code == -1)
+        return (-1);
     if (code == 84)
         return (84);
     return (get_section(data, elf, NULL, NULL));
@@ -86,10 +88,12 @@ int open_files(char *binary_name, char *filename)
     code = check_format(data);
     close(fd);
     if (code == 1) {
-        printf("%s: %s: no symbols\n", binary_name, filename);
+        fprintf(stderr, "%s: %s: no symbols\n", binary_name, filename);
         return (1);
-    } else if (code == 84)
+    }
+    if (code == 84)
         return (84);
-    else
-        return (0);
+    if (code == -1)
+        return (1);
+    return (0);
 }

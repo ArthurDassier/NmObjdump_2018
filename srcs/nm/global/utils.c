@@ -22,8 +22,10 @@ int check_elf(Elf64_Ehdr *elf, void *data)
     if (elf == NULL || data == NULL)
         return (84);
     if (elf->e_ident[0] != ELFMAG0 || elf->e_ident[1] != ELFMAG1
-    || elf->e_ident[2] != ELFMAG2 || elf->e_ident[3] != ELFMAG3)
-        return (1);
+    || elf->e_ident[2] != ELFMAG2 || elf->e_ident[3] != ELFMAG3) {
+        fprintf(stderr, "file format not recognize\n");
+        return (-1);
+    }
     if (elf->e_ident[4] == 1)
         return (get_section_three(data, NULL, NULL, NULL));
     return (0);
