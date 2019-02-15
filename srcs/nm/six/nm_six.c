@@ -33,16 +33,14 @@ Elf64_Shdr *shdr, char *str)
         insert_end(list, adr, type, name);
 }
 
-int get_section(void *data, Elf64_Shdr *symtab,
+int get_section(void *data, Elf64_Ehdr *elf,
 Elf64_Shdr *strtab, Elf64_Sym *sym)
 {
-    Elf64_Ehdr *elf = (Elf64_Ehdr *)(data);
     Elf64_Shdr *shdr = (Elf64_Shdr *) (data + elf->e_shoff);
+    Elf64_Shdr *symtab = NULL;
     chainlist *list = NULL;
-    char *str = NULL;
+    char *str = (char *)(data + shdr[elf->e_shstrndx].sh_offset);
 
-    check_elf(elf, shdr, data);
-    str = (char *) (data + shdr[elf->e_shstrndx].sh_offset);
     getter(str, 1);
     for (int i = 0; i < elf->e_shnum; ++i)
         if (shdr[i].sh_size)
@@ -52,26 +50,46 @@ Elf64_Shdr *strtab, Elf64_Sym *sym)
     sym = (Elf64_Sym*) (data + symtab->sh_offset);
     str = (char*) (data + strtab->sh_offset);
     if (sym == NULL || str == NULL)
-        exit(84);
+        return (84);
     for (size_t i = 0; i < (symtab->sh_size / symtab->sh_entsize); ++i)
         if (sym[i].st_name != 0 && sym[i].st_info != STT_FILE)
             put_things_in_list(&list, &sym[i], shdr, str);
-    list = brain(list);
-    print_me_that(list);
+    sort_and_print(list);
     return (0);
+}
+
+int check_format(void *data)
+{
+    int code = 0;
+    Elf64_Ehdr *elf = (Elf64_Ehdr *)(data);
+
+    code = check_elf(elf, data);
+    if (code == 1)
+        return (1);
+    if (code == 2)
+        return (0);
+    if (code == 84)
+        return (84);
+    return (get_section(data, elf, NULL, NULL));
 }
 
 int open_files(char *binary_name, char *filename)
 {
     void *data = NULL;
     int fd = 0;
+    int code = 0;
 
     fd = open(filename, O_RDONLY);
     if (fd == -1)
         return (84);
     data = mmap(NULL, lseek(fd, 0, SEEK_END), PROT_READ, MAP_SHARED, fd, 0);
-    if (get_section(data, NULL, NULL, NULL))
-        printf("%s: %s: no symbols\n", binary_name, filename);
+    code = check_format(data);
     close(fd);
-    return (0);
+    if (code == 1) {
+        printf("%s: %s: no symbols\n", binary_name, filename);
+        return (1);
+    } else if (code == 84)
+        return (84);
+    else
+        return (0);
 }

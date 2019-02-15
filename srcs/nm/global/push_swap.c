@@ -7,7 +7,7 @@
 
 #include "nmobjdump.h"
 
-chainlist *brain(chainlist *liste)
+void sort_and_print(chainlist *liste)
 {
     chainlist *list_a = liste;
     chainlist *list_b = NULL;
@@ -20,5 +20,5 @@ chainlist *brain(chainlist *liste)
     }
     while (list_b != NULL)
         pa(&list_b, &list_a);
-    return (list_a);
+    print_me_that(list_a);
 }

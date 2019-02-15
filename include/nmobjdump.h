@@ -34,8 +34,8 @@ int open_files(char *, char *);
 char found_type_six(Elf64_Sym, Elf64_Shdr *);
 char found_type_three(Elf32_Sym, Elf32_Shdr *);
 
-void get_section_three(void *, Elf32_Shdr *, Elf32_Shdr *, Elf32_Sym *);
-void check_elf(Elf64_Ehdr *, Elf64_Shdr *, void *);
+int get_section_three(void *, Elf32_Shdr *, Elf32_Shdr *, Elf32_Sym *);
+int check_elf(Elf64_Ehdr *, void *);
 
 chainlist *init(int, char, char *);
 void insert_end(chainlist **, int, char, char *);
@@ -51,8 +51,8 @@ void ra(chainlist **);
 void pa(chainlist **, chainlist **);
 int recup(chainlist *);
 
-chainlist *brain(chainlist *);
 void print_me_that(chainlist *);
+void sort_and_print(chainlist *);
 
 char *getter(char *, int);
 

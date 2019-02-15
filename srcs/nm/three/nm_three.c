@@ -33,26 +33,27 @@ Elf32_Shdr *shdr, char *str)
         insert_end(list, adr, type, name);
 }
 
-void get_section_three(void *data, Elf32_Shdr *symtab,
+int get_section_three(void *data, Elf32_Shdr *symtab,
 Elf32_Shdr *strtab, Elf32_Sym *sym)
 {
     Elf32_Ehdr *elf = (Elf32_Ehdr *)(data);
     Elf32_Shdr *shdr = (Elf32_Shdr *) (data + elf->e_shoff);
     chainlist *list = NULL;
-    char *str = NULL;
+    char *str = (char *)(data + shdr[elf->e_shstrndx].sh_offset);
 
-    str = (char *) (data + shdr[elf->e_shstrndx].sh_offset);
     getter(str, 1);
     for (int i = 0; i < elf->e_shnum; ++i)
         if (shdr[i].sh_size)
             if_cmp_three(&symtab, &strtab, &shdr[i], str);
+    if (symtab == NULL)
+        return (1);
     sym = (Elf32_Sym*) (data + symtab->sh_offset);
     str = (char*) (data + strtab->sh_offset);
-    if (sym == NULL || str == NULL || symtab == NULL)
-        exit(84);
+    if (sym == NULL || str == NULL)
+        return (84);
     for (size_t i = 0; i < (symtab->sh_size / symtab->sh_entsize); ++i)
         if (sym[i].st_name != 0 && sym[i].st_info != STT_FILE)
             put_things_in_list_three(&list, &sym[i], shdr, str);
-    list = brain(list);
-    print_me_that(list);
+    sort_and_print(list);
+    return (2);
 }
