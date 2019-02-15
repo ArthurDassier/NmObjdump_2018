@@ -16,40 +16,58 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 
-int main(int ac, char **av)
+void get_section(void *data, char *filename)
 {
     Elf64_Ehdr *elf;
     Elf64_Shdr *shdr;
-    void *data;
     char *strtab;
-    int filesize;
-    int counter;
-    int fd;
+    int counter = 0;
 
-    counter = 0;
-    fd = open(av[1], O_RDONLY);
-    if (fd == -1) {
-        perror("open : ");
-        return (EXIT_FAILURE);
+    elf = (Elf64_Ehdr *)(data);
+    shdr = (Elf64_Shdr *)(data + elf->e_shoff);
+    strtab = (char *)(data + shdr[elf->e_shstrndx].sh_offset);
+    if (elf->e_ident[0] != ELFMAG0 || elf->e_ident[1] != ELFMAG1
+    || elf->e_ident[2] != ELFMAG2 || elf->e_ident[3] != ELFMAG3)
+        exit(84);
+    printf("\n%s:     file format\n", filename);
+    printf("architecture: %d, flags 0x%08x:\n\n", elf->e_machine, elf->e_flags);
+    printf("start address 0x%016x\n\n", (unsigned int)elf->e_entry);
+    // while(counter < elf->e_shnum) {
+    //     if (strcmp(&strtab[shdr[counter].sh_name], ".bss")
+    //     && strcmp(&strtab[shdr[counter].sh_name], ".symtab")
+    //     && strcmp(&strtab[shdr[counter].sh_name], ".strtab")
+    //     && strcmp(&strtab[shdr[counter].sh_name], ".shstrtab")
+    //     && strcmp(&strtab[shdr[counter].sh_name], "\0"))
+    //         printf("%s\n", &strtab[shdr[counter].sh_name]);
+    //     ++counter;
+    // }
+}
+
+int open_files(char *filename)
+{
+    void *data = NULL;
+    int fd = 0;
+
+    fd = open(filename, O_RDONLY);
+    if (fd == -1)
+        return (84);
+    data = mmap(NULL, lseek(fd, 0, SEEK_END), PROT_READ, MAP_SHARED, fd, 0);
+    if (data == NULL) {
+        close(fd);
+        return (84);
     }
-    filesize = lseek(fd, 0, SEEK_END);
-    data = mmap(NULL, filesize, PROT_READ, MAP_SHARED, fd, 0);
-    if (data != NULL) {
-        elf = (Elf64_Ehdr *)(data);
-        shdr = (Elf64_Shdr *)(data + elf->e_shoff);
-        strtab = (char *)(data + shdr[elf->e_shstrndx].sh_offset);
-        while(counter < elf->e_shnum) {
-            if (strcmp(&strtab[shdr[counter].sh_name], ".bss")
-            && strcmp(&strtab[shdr[counter].sh_name], ".symtab")
-            && strcmp(&strtab[shdr[counter].sh_name], ".strtab")
-            && strcmp(&strtab[shdr[counter].sh_name], ".shstrtab")
-            && strcmp(&strtab[shdr[counter].sh_name], "\0")) {
-                printf("%s\n", &strtab[shdr[counter].sh_name]);
-            }
-            ++counter;
-        }
-        return (EXIT_SUCCESS);
+    get_section(data, filename);
+    close(fd);
+    return (0);
+}
+
+int main(int ac , char **av)
+{
+    if (ac == 1)
+        return (open_files("a.out"));
+    for (int i = 1; i < ac; ++i) {
+        if (open_files(av[i]) == 84)
+            return (84);
     }
-    perror("mmap :");
-    return (EXIT_FAILURE);
+    return (0);
 }

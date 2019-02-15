@@ -17,7 +17,7 @@ char *getter(char *str, int value)
     return (tamer);
 }
 
-void verify_elf(Elf64_Ehdr *elf, Elf64_Shdr *shdr, void *data)
+void check_elf(Elf64_Ehdr *elf, Elf64_Shdr *shdr, void *data)
 {
     if (elf == NULL || shdr == NULL || data == NULL)
         exit(84);

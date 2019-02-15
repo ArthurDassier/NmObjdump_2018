@@ -48,7 +48,7 @@ Elf32_Shdr *strtab, Elf32_Sym *sym)
             if_cmp_three(&symtab, &strtab, &shdr[i], str);
     sym = (Elf32_Sym*) (data + symtab->sh_offset);
     str = (char*) (data + strtab->sh_offset);
-    if (sym == NULL || str == NULL)
+    if (sym == NULL || str == NULL || symtab == NULL)
         exit(84);
     for (size_t i = 0; i < (symtab->sh_size / symtab->sh_entsize); ++i)
         if (sym[i].st_name != 0 && sym[i].st_info != STT_FILE)

@@ -33,7 +33,7 @@ Elf64_Shdr *shdr, char *str)
         insert_end(list, adr, type, name);
 }
 
-void get_section(void *data, Elf64_Shdr *symtab,
+int get_section(void *data, Elf64_Shdr *symtab,
 Elf64_Shdr *strtab, Elf64_Sym *sym)
 {
     Elf64_Ehdr *elf = (Elf64_Ehdr *)(data);
@@ -41,12 +41,14 @@ Elf64_Shdr *strtab, Elf64_Sym *sym)
     chainlist *list = NULL;
     char *str = NULL;
 
-    verify_elf(elf, shdr, data);
+    check_elf(elf, shdr, data);
     str = (char *) (data + shdr[elf->e_shstrndx].sh_offset);
     getter(str, 1);
     for (int i = 0; i < elf->e_shnum; ++i)
         if (shdr[i].sh_size)
             if_cmp(&symtab, &strtab, &shdr[i], str);
+    if (symtab == NULL)
+        return (1);
     sym = (Elf64_Sym*) (data + symtab->sh_offset);
     str = (char*) (data + strtab->sh_offset);
     if (sym == NULL || str == NULL)
@@ -56,9 +58,10 @@ Elf64_Shdr *strtab, Elf64_Sym *sym)
             put_things_in_list(&list, &sym[i], shdr, str);
     list = brain(list);
     print_me_that(list);
+    return (0);
 }
 
-int open_files(char *filename)
+int open_files(char *binary_name, char *filename)
 {
     void *data = NULL;
     int fd = 0;
@@ -67,7 +70,8 @@ int open_files(char *filename)
     if (fd == -1)
         return (84);
     data = mmap(NULL, lseek(fd, 0, SEEK_END), PROT_READ, MAP_SHARED, fd, 0);
-    get_section(data, NULL, NULL, NULL);
+    if (get_section(data, NULL, NULL, NULL))
+        printf("%s: %s: no symbols\n", binary_name, filename);
     close(fd);
     return (0);
 }

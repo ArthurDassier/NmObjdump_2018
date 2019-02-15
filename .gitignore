@@ -1,3 +1,4 @@
 *.o
 my_nm
 libmy.a
+norminette.py
