@@ -78,12 +78,13 @@ int check_format(void *data)
 int open_files(char *binary_name, char *filename)
 {
     void *data = NULL;
-    int fd = 0;
+    int fd = open(filename, O_RDONLY);
     int code = 0;
 
-    fd = open(filename, O_RDONLY);
-    if (fd == -1)
-        return (84);
+    if (fd == -1) {
+        fprintf(stderr, "%s: '%s': No such file\n", binary_name, filename);
+        return (1);
+    }
     data = mmap(NULL, lseek(fd, 0, SEEK_END), PROT_READ, MAP_SHARED, fd, 0);
     code = check_format(data);
     close(fd);
