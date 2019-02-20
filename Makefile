@@ -5,7 +5,7 @@
 ## a_makefile_for_projetcs
 ##
 
-CC	=	gcc
+CC	=	gcc -g3
 
 RM	=	rm -rf
 
@@ -14,6 +14,8 @@ CFLAGS	+= -Wall -Wextra
 CFLAGS	+=	-I./include
 
 NM	=	my_nm
+
+DUMP	=	my_objdump
 
 SRCS_NM	=	srcs/nm/nm.c						\
 			srcs/nm/global/print.c				\
@@ -27,21 +29,31 @@ SRCS_NM	=	srcs/nm/nm.c						\
 			srcs/nm/six/found_type_six.c		\
 			srcs/nm/six/nm_six.c				\
 
+SRCS_DUMP	=	srcs/objdump/objdump.c			\
 
 OBJS_NM	=	$(SRCS_NM:.c=.o)
 
-all: nm
+OBJS_DUMP	=	$(SRCS_DUMP:.c=.o)
+
+all: nm objdump
 
 nm: $(NM)
+
+objdump: $(DUMP)
 
 $(NM): $(OBJS_NM)
 	$(CC) $(OBJS_NM) -o $(NM)
 
+$(DUMP): $(OBJS_DUMP)
+	$(CC) $(OBJS_DUMP) -o $(DUMP)
+
 clean:
 	$(RM) $(OBJS_NM)
+	$(RM) $(OBJS_DUMP)
 
 fclean: clean
 	$(RM) $(NM)
+	$(RM) $(DUMP)
 
 
 re: fclean all
