@@ -17,9 +17,9 @@ unsigned char *byte)
         else
             printf("%2s", "");
         if ((i + 1) % 4 == 0)
-            printf (" ");
+            printf(" ");
     }
-    printf (" ");
+    printf(" ");
 }
 
 static void print_during_three(Elf32_Shdr *shdr,
@@ -31,9 +31,9 @@ unsigned char *byte, size_t i)
         else
             printf("%2s", "");
         if ((j + 1) % 4 == 0)
-            printf (" ");
+            printf(" ");
     }
-    printf (" ");
+    printf(" ");
 }
 
 void print_bytes_three(Elf32_Ehdr *elf, Elf32_Shdr *shdr)

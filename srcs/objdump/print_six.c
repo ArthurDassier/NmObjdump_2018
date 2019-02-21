@@ -44,9 +44,9 @@ static void print_begin(Elf64_Addr var, Elf64_Shdr *shdr, unsigned char *byte)
         else
             printf("%2s", "");
         if ((i + 1) % 4 == 0)
-            printf (" ");
+            printf(" ");
     }
-    printf (" ");
+    printf(" ");
 }
 
 static void print_during(Elf64_Shdr *shdr, unsigned char *byte, size_t i)
@@ -57,9 +57,9 @@ static void print_during(Elf64_Shdr *shdr, unsigned char *byte, size_t i)
         else
             printf("%2s", "");
         if ((j + 1) % 4 == 0)
-            printf (" ");
+            printf(" ");
     }
-    printf (" ");
+    printf(" ");
 }
 
 void print_bytes(Elf64_Ehdr *elf, Elf64_Shdr *shdr)

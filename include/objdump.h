@@ -6,7 +6,7 @@
 */
 
 #ifndef OBJDUMP_H_
-	#define OBJDUMP_H_
+    #define OBJDUMP_H_
 
 #include <unistd.h>
 #include <stdio.h>
