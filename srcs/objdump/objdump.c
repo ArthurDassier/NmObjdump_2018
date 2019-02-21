@@ -7,41 +7,14 @@
 
 #include "objdump.h"
 
-char *add_flags(Elf64_Ehdr *elf)
+int get_section(char *filename, char *binary_name, void *data, Elf64_Ehdr *elf)
 {
-    char *str = calloc(10, 100);
+    Elf64_Shdr *shdr = (Elf64_Shdr *)(data + elf->e_shoff);
+    char *tab = (char *)(data + shdr[elf->e_shstrndx].sh_offset);
+    int code = format(filename, binary_name, elf);
 
-    if (elf->e_type == ET_EXEC)
-        str = strcat(str, "EXEC_P, D_PAGED");
-    if (elf->e_type == ET_DYN)
-        str = strcat(str, "DYNAMIC, D_PAGED");
-    if (elf->e_type == ET_REL)
-        str = strcat(str, ", HAS_RELOC");
-    return (str);
-}
-
-void format(char *filename, Elf64_Ehdr *elf)
-{
-    if (elf->e_ident[0] != ELFMAG0 || elf->e_ident[1] != ELFMAG1
-    || elf->e_ident[2] != ELFMAG2 || elf->e_ident[3] != ELFMAG3)
-        exit(84);
-    if (elf->e_ident[4] == 2)
-        printf("\n%s:     file format elf64-x86-64\n", filename);
-    printf("architecture: i386:x86-64, flags 0x%08x:\n", elf->e_flags);
-    printf("%s\n", add_flags(elf));
-    printf("start address 0x%016x\n\n", (unsigned int)elf->e_entry);
-}
-
-void get_section(void *data, char *filename)
-{
-    Elf64_Ehdr *elf = NULL;
-    Elf64_Shdr *shdr = NULL;
-    char *tab = NULL;
-
-    elf = (Elf64_Ehdr *)(data);
-    shdr = (Elf64_Shdr *)(data + elf->e_shoff);
-    tab = (char *)(data + shdr[elf->e_shstrndx].sh_offset);
-    format(filename, elf);
+    if (code != 0)
+        return (code);
     for (int counter = 0; counter < elf->e_shnum; ++counter) {
         if (shdr[counter].sh_size
         && strcmp(&tab[shdr[counter].sh_name], ".bss")
@@ -53,33 +26,56 @@ void get_section(void *data, char *filename)
             print_bytes(elf, &shdr[counter]);
         }
     }
+    return (0);
 }
 
-int open_files(char *filename)
+static int open_files_part_two(char *filename, char *binary_name,
+void *data)
 {
-    void *data = NULL;
-    int fd = 0;
+    Elf64_Ehdr *elf = (Elf64_Ehdr *)(data);
+
+    if (elf->e_ident[0] != ELFMAG0 || elf->e_ident[1] != ELFMAG1
+    || elf->e_ident[2] != ELFMAG2 || elf->e_ident[3] != ELFMAG3) {
+        fprintf(stderr, "%s: %s: File format not recognized\n",
+        binary_name, filename);
+        return (1);
+    }
+    if (elf->e_ident[4] == 2)
+        return (get_section(filename, binary_name, data, elf));
+    else
+        return (get_section_three(data, binary_name, filename));
+}
+
+int open_files(char *filename, char *binary_name, void *data, int fd)
+{
+    int code = 0;
 
     fd = open(filename, O_RDONLY);
-    if (fd == -1)
-        return (84);
-    data = mmap(NULL, lseek(fd, 0, SEEK_END), PROT_READ, MAP_SHARED, fd, 0);
-    if (data == NULL) {
-        close(fd);
-        return (84);
+    if (fd == -1) {
+        fprintf(stderr, "%s: '%s': No such file\n", binary_name, filename);
+        return (1);
     }
-    get_section(data, filename);
+    data = mmap(NULL, lseek(fd, 0, SEEK_END), PROT_READ, MAP_SHARED, fd, 0);
+    if (data == NULL)
+        return (84);
+    if (data == (void *) -1) {
+        fprintf(stderr, "%s: Warning: '%s' is a directory\n",
+        binary_name, filename);
+        close(fd);
+        return (1);
+    }
+    code = open_files_part_two(filename, binary_name, data);
     close(fd);
-    return (0);
+    return (code);
 }
 
 int main(int ac , char **av)
 {
+    int code = 0;
+
     if (ac == 1)
-        return (open_files("a.out"));
-    for (int i = 1; i < ac; ++i) {
-        if (open_files(av[i]) == 84)
-            return (84);
-    }
-    return (0);
+        return (open_files("a.out", av[0], NULL, 0));
+    for (int i = 1; i < ac; ++i)
+        code = open_files(av[i], av[0], NULL, 0);
+    return (code);
 }

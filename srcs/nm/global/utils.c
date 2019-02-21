@@ -17,13 +17,19 @@ char *getter(char *str, int value)
     return (tamer);
 }
 
-int check_elf(Elf64_Ehdr *elf, void *data)
+int check_elf(Elf64_Ehdr *elf, void *data, char *binary_name, char *filename)
 {
-    if (elf == NULL || data == NULL)
+    if (data == NULL)
         return (84);
+    if (elf == NULL || data == (void *) -1) {
+        fprintf(stderr, "%s: Warning: '%s' is a directory\n",
+        binary_name, filename);
+        return (-1);
+    }
     if (elf->e_ident[0] != ELFMAG0 || elf->e_ident[1] != ELFMAG1
     || elf->e_ident[2] != ELFMAG2 || elf->e_ident[3] != ELFMAG3) {
-        fprintf(stderr, "file format not recognize\n");
+        fprintf(stderr, "%s: %s: File format not recognized\n",
+        binary_name, filename);
         return (-1);
     }
     if (elf->e_ident[4] == 1)

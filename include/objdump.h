@@ -20,8 +20,10 @@
 #include <sys/mman.h>
 #include <ctype.h>
 
-void print_begin(Elf64_Addr, Elf64_Shdr *, unsigned char *);
-void print_during(Elf64_Shdr *, unsigned char *, size_t);
 void print_bytes(Elf64_Ehdr *, Elf64_Shdr *);
+int format(char *, char *, Elf64_Ehdr *);
+
+void print_bytes_three(Elf32_Ehdr *, Elf32_Shdr *);
+int get_section_three(void *, char *, char *);
 
 #endif /* !OBJDUMP_H_ */

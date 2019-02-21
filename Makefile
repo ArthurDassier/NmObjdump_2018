@@ -31,6 +31,8 @@ SRCS_NM	=	srcs/nm/nm.c						\
 
 SRCS_DUMP	=	srcs/objdump/objdump.c			\
 				srcs/objdump/print_six.c		\
+				srcs/objdump/obj_three.c		\
+				srcs/objdump/print_three.c		\
 
 OBJS_NM	=	$(SRCS_NM:.c=.o)
 

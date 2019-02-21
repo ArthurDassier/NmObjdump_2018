@@ -35,7 +35,7 @@ char found_type_six(Elf64_Sym, Elf64_Shdr *);
 char found_type_three(Elf32_Sym, Elf32_Shdr *);
 
 int get_section_three(void *, Elf32_Shdr *, Elf32_Shdr *, Elf32_Sym *);
-int check_elf(Elf64_Ehdr *, void *);
+int check_elf(Elf64_Ehdr *, void *, char *, char *);
 
 chainlist *init(int, char, char *);
 void insert_end(chainlist **, int, char, char *);

@@ -36,7 +36,7 @@ Elf64_Shdr *shdr, char *str)
 int get_section(void *data, Elf64_Ehdr *elf,
 Elf64_Shdr *strtab, Elf64_Sym *sym)
 {
-    Elf64_Shdr *shdr = (Elf64_Shdr *) (data + elf->e_shoff);
+    Elf64_Shdr *shdr = (Elf64_Shdr *)(data + elf->e_shoff);
     Elf64_Shdr *symtab = NULL;
     chainlist *list = NULL;
     char *str = (char *)(data + shdr[elf->e_shstrndx].sh_offset);
@@ -58,12 +58,12 @@ Elf64_Shdr *strtab, Elf64_Sym *sym)
     return (0);
 }
 
-int check_format(void *data)
+int check_format(void *data, char *binary_name, char *filename)
 {
     int code = 0;
     Elf64_Ehdr *elf = (Elf64_Ehdr *)(data);
 
-    code = check_elf(elf, data);
+    code = check_elf(elf, data, binary_name, filename);
     if (code == 1)
         return (1);
     if (code == 2)
@@ -86,7 +86,7 @@ int open_files(char *binary_name, char *filename)
         return (1);
     }
     data = mmap(NULL, lseek(fd, 0, SEEK_END), PROT_READ, MAP_SHARED, fd, 0);
-    code = check_format(data);
+    code = check_format(data, binary_name, filename);
     close(fd);
     if (code == 1) {
         fprintf(stderr, "%s: %s: no symbols\n", binary_name, filename);
