@@ -7,7 +7,7 @@
 
 #include "nmobjdump.h"
 
-static void if_cmp(Elf64_Shdr **symtab, Elf64_Shdr **strtab,
+static void cmp_six(Elf64_Shdr **symtab, Elf64_Shdr **strtab,
 Elf64_Shdr *shdr, char *str)
 {
     if (strcmp(&str[shdr->sh_name], ".symtab") == 0)
@@ -44,7 +44,7 @@ Elf64_Shdr *strtab, Elf64_Sym *sym)
     getter(str, 1);
     for (int i = 0; i < elf->e_shnum; ++i)
         if (shdr[i].sh_size)
-            if_cmp(&symtab, &strtab, &shdr[i], str);
+            cmp_six(&symtab, &strtab, &shdr[i], str);
     if (symtab == NULL)
         return (1);
     sym = (Elf64_Sym*) (data + symtab->sh_offset);

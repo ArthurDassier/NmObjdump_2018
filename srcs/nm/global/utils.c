@@ -37,26 +37,36 @@ int check_elf(Elf64_Ehdr *elf, void *data, char *binary_name, char *filename)
     return (0);
 }
 
+static int my_count(char const *str, int i)
+{
+    while ((str[i] == '_' || str[i] == '.') && str[i])
+        ++i;
+    return (i);
+}
+
+static int my_count_alpha(char const *str, int i)
+{
+    while (!(isalnum(str[i])) && str[i])
+        ++i;
+    return (i);
+}
+
 int my_strcmp(char const *s1, char const *s2, int i, int j)
 {
-    while ((s1[i] == '_' || s1[i] == '.') && s1[i])
-        ++i;
-    while ((s2[j] == '_' || s2[j] == '.') && s2[j])
-        ++j;
+    i = my_count(s1, i);
+    j = my_count(s2, j);
     while (tolower(s1[i]) == tolower(s2[j]) && s1[i] && s2[j]) {
         ++j;
         ++i;
-        while (!(isalnum(s1[i])) && s1[i])
-            ++i;
-        while (!(isalnum(s2[j])) && s2[j])
-            ++j;
+        i = my_count_alpha(s1, i);
+        j = my_count_alpha(s2, j);
     }
     if ((s1[i] == '\0' && s2[j] == '\0')) {
         if (s1[0] == '_')
             return (1);
         return (0);
-    } else if (tolower(s1[i]) > tolower(s2[j]))
+    }
+    if (tolower(s1[i]) > tolower(s2[j]))
         return (1);
-    else
-        return (0);
+    return (0);
 }
